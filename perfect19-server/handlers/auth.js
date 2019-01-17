@@ -78,3 +78,12 @@ exports.signup = async function (req, res, nxt) {
         })
     }
 }
+
+exports.clear = async function (req, res, nxt) {
+    await db.User.deleteMany({})
+    
+    return nxt({
+        status: 400,
+        message: 'Cleared!'
+    })
+}
