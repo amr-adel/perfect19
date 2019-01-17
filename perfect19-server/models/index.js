@@ -9,3 +9,4 @@ mongoose.connect("mongodb://localhost/perfect19", {
 });
 
 module.exports.User = require('./user')
+module.exports.Message = require('./message')

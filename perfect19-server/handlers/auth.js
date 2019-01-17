@@ -10,7 +10,8 @@ exports.signin = async function (req, res, nxt) {
         let {
             id,
             userName,
-            avatarSrc
+            avatarSrc,
+            messages
         } = user
 
         let isMatch = await user.comparePassword(req.body.password)
@@ -26,6 +27,7 @@ exports.signin = async function (req, res, nxt) {
                 id,
                 userName,
                 avatarSrc,
+                messages,
                 token
             })
         } else {
