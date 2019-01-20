@@ -11,16 +11,20 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
-})
+}, {
+    timestamps: true
+}
+)
 
 messageSchema.pre('remove', async function (nxt) {
     try {
         let user = await User.findById(this.user)
+        console.log(user)
         user.messages.remove(this.id)
         await user.save()
         return nxt()
     } catch (err) {
-        return next(err)
+        return nxt(err)
     }
 })
 

@@ -4,7 +4,7 @@ exports.createMessage = async function (req, res, nxt) {
     try {
         let message = await db.Message.create({
             text: req.body.text,
-            id: req.params.id
+            user: req.params.id
         })
 
         let foundUser = await db.User.findById(req.params.id)
@@ -16,8 +16,6 @@ exports.createMessage = async function (req, res, nxt) {
             avatarSrc: true
         })
 
-        console.log(foundMessage)
-
         return res.status(200).json(foundMessage)
 
     } catch (err) {
@@ -25,6 +23,26 @@ exports.createMessage = async function (req, res, nxt) {
     }
 }
 
-exports.getMessage = async function (req, res, nxt) {}
+exports.getMessage = async function (req, res, nxt) {
+    try {
+        let message = await db.Message.findById(req.params.message_id).populate('user', {
+            userName: true,
+            avatarSrc: true
+        })
 
-exports.removeMessage = async function (req, res, nxt) {}
+        return res.status(200).json(message)
+    } catch (err) {
+        return nxt(err)
+    }
+}
+
+exports.removeMessage = async function (req, res, nxt) {
+    try {
+        let message = await db.Message.findById(req.params.message_id)
+        await message.remove()
+
+        return res.status(200).json(message)
+    } catch (err) {
+        return nxt(err)
+    }
+}
