@@ -80,13 +80,3 @@ exports.signup = async function (req, res, nxt) {
         })
     }
 }
-
-exports.clear = async function (req, res, nxt) {
-    await db.User.updateOne({userName: 'admin'}, { $set: { wishes: [] }})
-    await db.Message.deleteMany({})
-    
-    return nxt({
-        status: 200,
-        message: 'Cleared!'
-    })
-}

@@ -22,7 +22,7 @@ app.use(bodyParser.json())
 app.use('/api/auth', authRoutes)
 app.use('/api/user/:id/wishes', isLoggedin, isAuthorized, wishesRoutes)
 
-app.use('/api/wishes', isLoggedin, async function (req, res, nxt) {
+app.get('/api/wishes', isLoggedin, async function (req, res, nxt) {
     try {
         let wishes = await db.Wish.find()
             .sort({
@@ -37,6 +37,22 @@ app.use('/api/wishes', isLoggedin, async function (req, res, nxt) {
     } catch (err) {
         return nxt(err)
     }
+})
+
+app.delete('/api/wishes', isLoggedin, async function (req, res, nxt) {
+    await db.User.updateOne({
+        userName: 'admin'
+    }, {
+        $set: {
+            wishes: []
+        }
+    })
+    await db.Wish.deleteMany({})
+
+    return nxt({
+        status: 200,
+        message: 'Cleared!'
+    })
 })
 
 app.use(function (req, res, nxt) {
