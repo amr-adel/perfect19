@@ -10,8 +10,8 @@ exports.signin = async function (req, res, nxt) {
         let {
             id,
             userName,
-            avatarSrc,
-            messages
+            avatar,
+            wishes
         } = user
 
         let isMatch = await user.comparePassword(req.body.password)
@@ -20,14 +20,14 @@ exports.signin = async function (req, res, nxt) {
             let token = jwt.sign({
                 id,
                 userName,
-                avatarSrc
+                avatar
             }, process.env.SECRET_KEY)
 
             return res.status(200).json({
                 id,
                 userName,
-                avatarSrc,
-                messages,
+                avatar,
+                wishes,
                 token
             })
         } else {
@@ -53,19 +53,19 @@ exports.signup = async function (req, res, nxt) {
         let {
             id,
             userName,
-            avatarSrc
+            avatar
         } = user
 
         let token = jwt.sign({
             id,
             userName,
-            avatarSrc
+            avatar
         }, process.env.SECRET_KEY)
 
         return res.status(200).json({
             id,
             userName,
-            avatarSrc,
+            avatar,
             token
         })
 
@@ -82,11 +82,11 @@ exports.signup = async function (req, res, nxt) {
 }
 
 exports.clear = async function (req, res, nxt) {
-    await db.User.updateOne({userName: 'admin'}, { $set: { messages: [] }})
+    await db.User.updateOne({userName: 'admin'}, { $set: { wishes: [] }})
     await db.Message.deleteMany({})
     
     return nxt({
-        status: 400,
+        status: 200,
         message: 'Cleared!'
     })
 }

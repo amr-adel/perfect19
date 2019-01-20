@@ -7,7 +7,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const errorHandler = require('./handlers/error')
 const authRoutes = require('./routes/auth')
-const messagesRoutes = require('./routes/messages')
+const wishesRoutes = require('./routes/wishes')
 const {
     isLoggedin,
     isAuthorized
@@ -20,20 +20,20 @@ app.use(bodyParser.json())
 
 
 app.use('/api/auth', authRoutes)
-app.use('/api/user/:id/messages', isLoggedin, isAuthorized, messagesRoutes)
+app.use('/api/user/:id/wishes', isLoggedin, isAuthorized, wishesRoutes)
 
-app.use('/api/messages', isLoggedin, async function (req, res, nxt) {
+app.use('/api/wishes', isLoggedin, async function (req, res, nxt) {
     try {
-        let messages = await db.Message.find()
+        let wishes = await db.Wish.find()
             .sort({
                 createdAt: 'desc'
             })
             .populate('user', {
                 userName: true,
-                avataSrc: true
+                avatar: true
             })
 
-        return res.status(200).json(messages)
+        return res.status(200).json(wishes)
     } catch (err) {
         return nxt(err)
     }

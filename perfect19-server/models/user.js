@@ -16,12 +16,12 @@ const userSchema = mongoose.Schema({
         required: true,
         unique: true
     },
-    avatarSrc: {
+    avatar: {
         type: String
     },
-    messages: [{
+    wishes: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message'
+        ref: 'Wish'
     }]
 })
 

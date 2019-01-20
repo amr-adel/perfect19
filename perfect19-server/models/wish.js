@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const User = require('./user')
 
-const messageSchema = new mongoose.Schema({
+const wishSchema = new mongoose.Schema({
     text: {
         type: String,
         required: true,
@@ -16,11 +16,10 @@ const messageSchema = new mongoose.Schema({
 }
 )
 
-messageSchema.pre('remove', async function (nxt) {
+wishSchema.pre('remove', async function (nxt) {
     try {
         let user = await User.findById(this.user)
-        console.log(user)
-        user.messages.remove(this.id)
+        user.wishes.remove(this.id)
         await user.save()
         return nxt()
     } catch (err) {
@@ -28,6 +27,6 @@ messageSchema.pre('remove', async function (nxt) {
     }
 })
 
-const Message = mongoose.model('Message', messageSchema)
+const Wish = mongoose.model('Wish', wishSchema)
 
-module.exports = Message
+module.exports = Wish
